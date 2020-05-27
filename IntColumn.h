@@ -18,7 +18,7 @@ class IntColumn : public IColumn {
     private:
         std::vector< std::pair<int, bool> > data; ///< field for storing row values\n
                                                   /// which are pairs having a boolean\n
-                                                  /// second value which is 'false' if\n
+                                                  /// as second value which is 'false' if\n
                                                   /// the cell is 'NULL'
 };
 
