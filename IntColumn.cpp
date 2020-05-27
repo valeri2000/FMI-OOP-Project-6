@@ -1,5 +1,22 @@
 #include "IntColumn.h"
 #include "StringParser.h"
+#include <string>
+
+std::string IntColumn::getType() const {
+    return "int";
+}
+
+std::string IntColumn::at(const unsigned int& index) const {
+    if(index >= (int)data.size()) {
+        return ""; //todo
+    }
+
+    if(data[index].second == false) {
+        return "NULL";
+    }
+
+    return std::to_string(data[index].first);
+}
 
 std::vector<unsigned int> 
 IntColumn::getRowsIndicesWith(const std::string& value) const {

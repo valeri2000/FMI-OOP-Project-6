@@ -6,6 +6,10 @@
 /// \brief Class for double column type
 class DoubleColumn : public IColumn {
     public:
+        virtual std::string 
+            getType() const override;
+        virtual std::string 
+            at(const unsigned int&) const override;
         virtual std::vector<unsigned int> 
             getRowsIndicesWith(const std::string&) const override;
         virtual void 

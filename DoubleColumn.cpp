@@ -2,6 +2,23 @@
 #include "StringParser.h"
 #include "Consts.h"
 #include <cmath>
+#include <string>
+
+std::string DoubleColumn::getType() const {
+    return "double";
+}
+
+std::string DoubleColumn::at(const unsigned int& index) const {
+    if(index >= (int)data.size()) {
+        return ""; //todo
+    }
+
+    if(data[index].second == false) {
+        return "NULL";
+    }
+
+    return std::to_string(data[index].first);
+}
 
 std::vector<unsigned int> 
 DoubleColumn::getRowsIndicesWith(const std::string& value) const {

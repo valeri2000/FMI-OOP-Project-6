@@ -24,6 +24,16 @@ class IColumn {
         /// \brief Virtual destructor for deleting objects with no leak
         virtual ~IColumn();
 
+        /// \brief Pure virtual function for determining column type
+        /// \return column type as text
+        virtual std::string getType() const = 0;
+
+        /// \brief Pure virtual function for get values at index
+        /// \param 'const unsigned int' which is the desired index
+        /// \return 'const string&' which is the value converted to text
+        virtual std::string 
+            at(const unsigned int&) const = 0;
+        
         /// \brief Pure virtual function to get row indices which have specific value.
         /// \param parameter 'const string' which is the desired value
         /// \return a vector of all row indices
