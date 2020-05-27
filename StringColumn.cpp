@@ -66,3 +66,6 @@ void StringColumn::insertRowWith(const std::string& value) {
         this->data.push_back(std::make_pair("", false));
     }
 }
+
+StringColumn::StringColumn(const std::string& name) :
+    IColumn(name) {}

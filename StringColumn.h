@@ -15,6 +15,9 @@ class StringColumn : public IColumn {
         virtual void
             insertRowWith(const std::string&) override;
 
+        /// \brief Constructor accepting column name as parameter
+        StringColumn(const std::string&);
+        
     private:
         std::vector< std::pair<std::string, bool> > 
             data; ///< field for storing row values\n

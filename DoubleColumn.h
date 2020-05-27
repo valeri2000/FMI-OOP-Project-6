@@ -15,6 +15,9 @@ class DoubleColumn : public IColumn {
         virtual void
             insertRowWith(const std::string&) override;
 
+        /// \brief Constructor accepting column name as parameter
+        DoubleColumn(const std::string&);
+
     private:
         std::vector< std::pair<double, bool> > data; ///< field for storing row values\n
                                                      /// which are pairs having a boolean\n

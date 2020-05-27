@@ -10,9 +10,19 @@
 /// All public pure virtual methods in it will be implemented\n
 /// in derived classes.
 class IColumn {
+    private:
+        std::string colName; ///< name of the column
+
     public:
+        /// \brief Constructor acception column name as parameter
+        IColumn(const std::string&);
+
+        /// \brief Getter for column name
+        /// \return column name
+        std::string getName() const;
+
         /// \brief Virtual destructor for deleting objects with no leak
-        virtual ~IColumn() {}
+        virtual ~IColumn();
 
         /// \brief Pure virtual function to get row indices which have specific value.
         /// \param parameter 'const string' which is the desired value

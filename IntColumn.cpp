@@ -72,3 +72,6 @@ void IntColumn::insertRowWith(const std::string& value) {
 
     this->data.push_back(parsed);
 }
+
+IntColumn::IntColumn(const std::string& name) :
+    IColumn(name) {}
