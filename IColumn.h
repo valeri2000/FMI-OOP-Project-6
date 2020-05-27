@@ -11,6 +11,9 @@
 /// in derived classes.
 class IColumn {
     public:
+        /// \brief Virtual destructor for deleting objects with no leak
+        virtual ~IColumn() {}
+
         /// \brief Pure virtual function to get row indices which have specific value.
         /// \param parameter 'const string' which is the desired value
         /// \return a vector of all row indices
