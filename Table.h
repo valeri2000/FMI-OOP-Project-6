@@ -9,6 +9,7 @@ class Table {
         std::string name; ///< name of the table
         std::string file; ///< file in which the table is saved
         std::vector<IColumn*> columns; ///< columns in the table constructing the rows
+        unsigned int countRows;
 
     public:
         /// \brief Constructor with 2 parameters
@@ -60,8 +61,6 @@ class Table {
         /// \param 'const vector<string>' which contains the values to be added to the columns
         void insert(const std::vector<std::string>&);
 
-        //innerjoin
-
         /// \brief 'rename' function
         /// \param 'const string' which is the new name for the table
         void rename(const std::string&);
@@ -71,7 +70,7 @@ class Table {
         /// \param second 'const string' which is the searched value
         /// \return 'unsigned int' which is the number of those cells
         unsigned int count(const unsigned int&, const std::string&);
-        
+
         //aggregate
 
 };
