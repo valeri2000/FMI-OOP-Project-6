@@ -82,6 +82,14 @@ void Table::print() const {
     std::cout << '\n';
 }
 
+void Table::describe() const {
+    for(IColumn* currCol : this->columns) {
+        std::cout << currCol->getType() << ' ';
+    }
+    
+    std::cout << '\n';
+}
+
 void Table::saveToFile(const std::string& newFile) const {
     std::ofstream out(newFile, std::ios::out | std::ios::trunc);
 

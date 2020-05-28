@@ -31,6 +31,9 @@ class Table {
         /// \brief Function which prints the table
         void print() const;
 
+        /// \brief Functions to describe column type names
+        void describe() const;
+
         /// \brief Function which saves the table to specific file
         /// \param 'string' which is the file name
         void saveToFile(const std::string&) const;
