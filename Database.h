@@ -3,11 +3,13 @@
 
 #include "Table.h"
 #include <fstream>
+#include <unordered_map>
 
 /// \brief Database class which has tables
 class Database {
     private:
         std::vector<Table*> tables; ///< vector of tables, which is the data in the database
+        std::unordered_map<std::string, unsigned int> indexOf; ///< match table name to its index in the database 
 
     public:
         /// \brief Constructor for database
@@ -17,9 +19,10 @@ class Database {
         /// \brief Destructor which will delete the Table objects
         ~Database();
 
-        /// \brief Import table by file name
-        /// \param 'const std::string' which is the file name
-        void importT(const std::string&);
+        /// \brief Import table
+        /// \param first 'const std::string' which is the table name
+        /// \param second 'const std::string' which is the file name
+        void importT(const std::string&, const std::string&);
 
         /// \brief Show tables by names
         void showT() const;
@@ -42,25 +45,19 @@ class Database {
         /// \param first 'const string' which is the name of the table
         ///
         /// (Expansion of table method)
-        void printT(const std::string&) const;
+        void printT(const std::string&);
 
         /// \brief Functions to describe column type names
         /// \param first 'const string' which is the name of the table
         ///
         /// (Expansion of table method)
-        void describeT(const std::string&) const;
-
-        /// \brief Function which saves the table to specific file
-        /// \param first 'const string' which is the name of the table
-        ///
-        /// (Expansion of table method)
-        void saveToFileT(const std::string&, const std::string&) const;
+        void describeT(const std::string&);
 
         /// \brief 'select' function
         /// \param first 'const string' which is the name of the table
         ///
         /// (Expansion of table method)
-        void selectT(const std::string&, const unsigned int&, const std::string&) const;
+        void selectT(const std::string&, const unsigned int&, const std::string&);
 
         /// \brief 'addcolumn' function
         /// \param first 'const string' which is the name of the table
