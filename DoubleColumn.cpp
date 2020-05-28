@@ -1,8 +1,9 @@
 #include "DoubleColumn.h"
 #include "StringParser.h"
-#include "Consts.h"
 #include <cmath>
 #include <string>
+
+const double EPS = 0.000000001;
 
 std::string DoubleColumn::getType() const {
     return "double";
@@ -43,7 +44,7 @@ DoubleColumn::getRowsIndicesWith(const std::string& value) const {
 
     unsigned int index = 0;
     for(const std::pair<double, bool>& i : this->data) {
-        if(i.second == true && fabs(i.first - parsed.first) < Consts::EPS) {
+        if(i.second == true && fabs(i.first - parsed.first) < EPS) {
             indices.push_back(index);
         }
 
