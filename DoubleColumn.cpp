@@ -1,5 +1,5 @@
 #include "DoubleColumn.h"
-#include "StringParser.h"
+#include "Parser.h"
 #include <cmath>
 #include <string>
 
@@ -25,9 +25,9 @@ std::vector<unsigned int>
 DoubleColumn::getRowsIndicesWith(const std::string& value) const {
     std::vector<unsigned int> indices;
 
-    std::pair<double, bool> parsed = StringParser::convertToDouble(value);
+    std::pair<double, bool> parsed = Parser::convertToDouble(value);
     if(parsed.second == false) {
-        if(StringParser::isNull(value) == true) {
+        if(Parser::isNull(value) == true) {
             unsigned int index = 0;
 
             for(const std::pair<double, bool>& i : this->data) {
@@ -59,9 +59,9 @@ void DoubleColumn::updateRowByIndex(const unsigned int& index, const std::string
         return; //out of range
     }
 
-    std::pair<double, bool> parsed = StringParser::convertToDouble(value);
+    std::pair<double, bool> parsed = Parser::convertToDouble(value);
     if(parsed.second == false) {
-        if(StringParser::isNull(value) == false) {
+        if(Parser::isNull(value) == false) {
             return; //incompatible value
         }
     }
@@ -83,9 +83,9 @@ void DoubleColumn::deleteRowByIndex(const unsigned int& index) {
 }
 
 void DoubleColumn::insertRowWith(const std::string& value) {
-    std::pair<double, bool> parsed = StringParser::convertToDouble(value);
+    std::pair<double, bool> parsed = Parser::convertToDouble(value);
     if(parsed.second == false) {
-        if(StringParser::isNull(value) == false) {
+        if(Parser::isNull(value) == false) {
             return; //incompatible type
         }
     }

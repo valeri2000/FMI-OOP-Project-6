@@ -1,6 +1,6 @@
 #include "Table.h"
 #include "ColumnFactory.h"
-#include "StringParser.h"
+#include "Parser.h"
 #include <fstream>
 #include <iostream>
 
@@ -202,7 +202,7 @@ const unsigned int& tcolIndex, const std::string& oper) {
     std::vector<double> tempValues;
 
     for(const unsigned int& currRow : indices) {
-        double currValue = StringParser::convertToDouble(
+        double currValue = Parser::convertToDouble(
             this->columns[tcolIndex]->at(currRow)
         ).first;
 

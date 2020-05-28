@@ -1,5 +1,5 @@
 #include "StringColumn.h"
-#include "StringParser.h"
+#include "Parser.h"
 
 std::string StringColumn::getType() const {
     return "string";
@@ -21,8 +21,8 @@ std::vector<unsigned int>
 StringColumn::getRowsIndicesWith(const std::string& value) const {
     std::vector<unsigned int> indices;
 
-    if(StringParser::isString(value) == false) {
-        if(StringParser::isNull(value) == true) {
+    if(Parser::isString(value) == false) {
+        if(Parser::isNull(value) == true) {
             unsigned int index = 0;
 
             for(const std::pair<std::string, bool>& i : this->data) {
@@ -54,10 +54,10 @@ void StringColumn::updateRowByIndex(const unsigned int& index, const std::string
         return; //out of range
     }
 
-    if(StringParser::isString(value) == true) {
+    if(Parser::isString(value) == true) {
         this->data[index].first = value;
         this->data[index].second = true;
-    } else if(StringParser::isNull(value) == true) {
+    } else if(Parser::isNull(value) == true) {
         this->data[index].second = false;
     }
 }
@@ -76,9 +76,9 @@ void StringColumn::deleteRowByIndex(const unsigned int& index) {
 }
 
 void StringColumn::insertRowWith(const std::string& value) {
-    if(StringParser::isString(value) == true) {
+    if(Parser::isString(value) == true) {
         this->data.push_back(std::make_pair(value, true));
-    } else if(StringParser::isNull(value) == true) {
+    } else if(Parser::isNull(value) == true) {
         this->data.push_back(std::make_pair("", false));
     }
 }

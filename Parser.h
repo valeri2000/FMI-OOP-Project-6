@@ -1,11 +1,11 @@
-#ifndef __STRINGPARSER_H_INCLUDED
-#define __STRINGPARSER_H_INCLUDED
+#ifndef __PARSER_H_INCLUDED
+#define __PARSER_H_INCLUDED
 
 #include <utility>
 #include <iostream>
 
 /// \brief Class for converting input to column type values.
-class StringParser {
+class Parser {
     public:
         /// \brief Static function to convert user input to integer.
         /// \param parameter 'const string' which is the user input

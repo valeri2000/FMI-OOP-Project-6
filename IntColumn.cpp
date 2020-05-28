@@ -1,5 +1,5 @@
 #include "IntColumn.h"
-#include "StringParser.h"
+#include "Parser.h"
 #include <string>
 
 std::string IntColumn::getType() const {
@@ -22,9 +22,9 @@ std::vector<unsigned int>
 IntColumn::getRowsIndicesWith(const std::string& value) const {
     std::vector<unsigned int> indices;
 
-    std::pair<int, bool> parsed = StringParser::convertToInt(value);
+    std::pair<int, bool> parsed = Parser::convertToInt(value);
     if(parsed.second == false) {
-        if(StringParser::isNull(value) == true) {
+        if(Parser::isNull(value) == true) {
             unsigned int index = 0;
 
             for(const std::pair<int, bool>& i : this->data) {
@@ -56,9 +56,9 @@ void IntColumn::updateRowByIndex(const unsigned int& index, const std::string& v
         return; //out of range
     }
 
-    std::pair<int, bool> parsed = StringParser::convertToInt(value);
+    std::pair<int, bool> parsed = Parser::convertToInt(value);
     if(parsed.second == false) {
-        if(StringParser::isNull(value) == false) {
+        if(Parser::isNull(value) == false) {
             return; //incompatible value
         }
     }
@@ -80,9 +80,9 @@ void IntColumn::deleteRowByIndex(const unsigned int& index) {
 }
 
 void IntColumn::insertRowWith(const std::string& value) {
-    std::pair<int, bool> parsed = StringParser::convertToInt(value);
+    std::pair<int, bool> parsed = Parser::convertToInt(value);
     if(parsed.second == false) {
-        if(StringParser::isNull(value) == false) {
+        if(Parser::isNull(value) == false) {
             return; //incompatible type
         }
     }

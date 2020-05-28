@@ -1,7 +1,7 @@
-#include "StringParser.h"
+#include "Parser.h"
 
 std::pair<int, bool>
-StringParser::convertToInt(const std::string& input) {
+Parser::convertToInt(const std::string& input) {
     std::pair<int, bool> wrong = std::make_pair(0, false);
 
     int n = (int)input.size();
@@ -40,7 +40,7 @@ StringParser::convertToInt(const std::string& input) {
 }       
 
 std::pair<double, bool>
-StringParser::convertToDouble(const std::string& input) {
+Parser::convertToDouble(const std::string& input) {
     std::pair<double, bool> wrong = std::make_pair(0, false);
 
     int n = (int)input.size();
@@ -98,7 +98,7 @@ StringParser::convertToDouble(const std::string& input) {
 }  
 
 bool
-StringParser::isString(const std::string& input) {
+Parser::isString(const std::string& input) {
     if((int)input.size() >= 2 && 
         input[0] == '"' && 
         input.back() == '"') {
@@ -109,6 +109,6 @@ StringParser::isString(const std::string& input) {
 }   
 
 bool
-StringParser::isNull(const std::string& input) {
+Parser::isNull(const std::string& input) {
     return input == "NULL";
 }       
