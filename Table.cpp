@@ -1,5 +1,6 @@
 #include "Table.h"
 #include "ColumnFactory.h"
+#include "StringParser.h"
 #include <fstream>
 #include <iostream>
 
@@ -127,7 +128,19 @@ void Table::addColumn(const std::string& colName, const std::string& colType) {
     }
 }
 
-void Table::update(const unsigned int&, const std::string&, const unsigned int&, const std::string&) {
+void Table::update(const unsigned int& colIndex, const std::string& value, 
+const unsigned int& tcolIndex, const std::string& tvalue) {
+    if(colIndex >= (int)this->columns.size() ||
+       tcolIndex >= (int)this->columns.size()) {
+        return; //handle
+    }
+
+    std::vector<unsigned int> indices = this->columns[colIndex]->getRowsIndicesWith(value);
+
+    for(const unsigned int& currRow : indices) {
+        this->columns[tcolIndex]->updateRowByIndex(currRow, tvalue);
+        //handle incompatible type
+    }
 
 }
 
@@ -163,6 +176,67 @@ void Table::rename(const std::string& newName) {
     this->name = newName;
 }
 
-unsigned int Table::count(const unsigned int&, const std::string&) {
+unsigned int Table::count(const unsigned int& colIndex, const std::string& value) {
+    if(colIndex >= (int)this->columns.size()) {
+        return 0; //handle
+    }
 
+    std::vector<unsigned int> indices = this->columns[colIndex]->getRowsIndicesWith(value);
+
+    return indices.size();
+}
+
+double Table::aggregate(const unsigned int& colIndex, const std::string& value, 
+const unsigned int& tcolIndex, const std::string& oper) {
+    if(colIndex >= (int)this->columns.size() ||
+       tcolIndex >= (int)this->columns.size()) {
+        return 0; //handle
+    }
+
+    std::string tColType = this->columns[tcolIndex]->getType();
+    if(tColType != "int" && tColType != "double") {
+        return 0; //handle
+    }
+
+    std::vector<unsigned int> indices = this->columns[colIndex]->getRowsIndicesWith(value);
+    std::vector<double> tempValues;
+
+    for(const unsigned int& currRow : indices) {
+        double currValue = StringParser::convertToDouble(
+            this->columns[tcolIndex]->at(currRow)
+        ).first;
+
+        tempValues.push_back(currValue);
+    }
+
+    double res;
+    if(oper == "sum") {
+        res = 0;
+
+        for(const double& currValue : tempValues) {
+            res += currValue;
+        }
+    } else if(oper == "product") {
+        res = 1;
+
+        for(const double& currValue : tempValues) {
+            res *= currValue;
+        }
+    } else if(oper == "maximum") {
+        res = -1e9;
+
+        for(const double& currValue : tempValues) {
+            res = std::max(res, currValue);
+        }
+    } else if(oper == "minimum") {
+        res = 1e9;
+
+        for(const double& currValue : tempValues) {
+            res = std::min(res, currValue);
+        }
+    } else {
+        return 0; //handle
+    }
+
+    return res;
 }

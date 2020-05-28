@@ -71,8 +71,13 @@ class Table {
         /// \return 'unsigned int' which is the number of those cells
         unsigned int count(const unsigned int&, const std::string&);
 
-        //aggregate
-
+        /// \brief 'aggregate' function
+        /// \param first 'const unsigned int' which is the asked column index
+        /// \param second 'const string' which is the value to be searched for
+        /// \param third 'const unsigned int' which is the target column index
+        /// \param forth 'const string' which is the operation(sum, product, maximum, minimum)
+        /// \return 'double' which is the result number after performing the operation
+        double aggregate(const unsigned int&, const std::string&, const unsigned int&, const std::string&);
 };
 
 #endif
