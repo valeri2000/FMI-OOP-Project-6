@@ -1,5 +1,6 @@
 #include "Database.h"
 #include "ColumnFactory.h"
+#include <cassert>
 
 void Database::clearDatabase() {
     for(Table* &t : this->tables) {
@@ -39,7 +40,7 @@ Database::Database(const std::string& fileName) {
 
         this->indexOf[tempName] = i;
     }
-
+    
     this->inputFile = fileName;
 }
 
@@ -58,6 +59,11 @@ void Database::saveToInputFile() {
     }
 
     out.close();
+
+    for(Table* t : this->tables) {
+        t->saveToFile(t->getFile());
+        assert(ErrorState::getState() == Flag::GOOD);
+    }
 }
 
 void Database::saveToSpecificFile(const std::string& file) {
@@ -76,6 +82,11 @@ void Database::saveToSpecificFile(const std::string& file) {
     }
 
     out.close();
+
+    for(Table* t : this->tables) {
+        t->saveToFile(t->getFile());
+        assert(ErrorState::getState() == Flag::GOOD);
+    }
 }
 
 void Database::importT(const std::string& tName, const std::string& tFileName) {
@@ -305,6 +316,9 @@ void Database::renameT(const std::string& tName, const std::string& newName) {
 
     unsigned int index = this->indexOf[tName];
     this->tables[index]->rename(newName);
+
+    this->indexOf.erase(tName);
+    this->indexOf[newName] = index;
 }
 
 unsigned int Database::countT(const std::string& tName, const unsigned int& colIndex, const std::string& value) {

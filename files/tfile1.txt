@@ -1,0 +1,16 @@
+3 4
+t1Column0 double
+21.500000
+-22.124000
+23.400000
+1.123400
+t1Column1 string
+"lol"
+"MUU"
+"Hello World"
+"Test Test"
+t1Column2 int
+101
+102
+103
+NULL

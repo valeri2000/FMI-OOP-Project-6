@@ -36,6 +36,7 @@ name(newName), file(newFile) {
     for(unsigned int currCol = 0; currCol < cols; ++currCol) {
         std::string colName, colType;
         in >> colName >> colType;
+        in.ignore(1024, '\n');
 
         IColumn* tryType = ColumnFactory::produce(colName, colType);
         if(tryType == nullptr) {
@@ -48,7 +49,7 @@ name(newName), file(newFile) {
 
         for(unsigned int currRow = 0; currRow < rows; ++currRow) {
             std::string cellValue;
-            in >> cellValue;
+            std::getline(in, cellValue);
 
             this->columns[currCol]->insertRowWith(cellValue);
             if(ErrorState::getState() != Flag::GOOD) {
@@ -224,19 +225,22 @@ void Table::insert(const std::vector<std::string>& values) {
         std::string currType = col->getType();
 
         if(currType == "string") {
-            if(Parser::isString(values[index]) == false) {
+            if(Parser::isString(values[index]) == false &&
+                Parser::isNull(values[index]) == false) {
                 typeMatch = false;
                 break;
             }
         } 
         else if(currType == "int") {
-            if(Parser::convertToInt(values[index]).second == false) {
+            if(Parser::convertToInt(values[index]).second == false &&
+                Parser::isNull(values[index]) == false) {
                 typeMatch = false;
                 break;
             }
         } 
         else if(currType == "double") {
-            if(Parser::convertToDouble(values[index]).second == false) {
+            if(Parser::convertToDouble(values[index]).second == false &&
+                Parser::isNull(values[index]) == false) {
                 typeMatch = false;
                 break;
             }

@@ -9,8 +9,7 @@ std::unordered_map<Flag, std::string> ErrorState::msgs = {
     {Flag::BAD_COMMAND, "Invalid command! Type 'help' to view available commands and usage."},
     {Flag::BAD_TABLE_NAME, "Invalid table name!"},
     {Flag::BAD_OPERATION, "Invalid operation!"},
-    {Flag::BAD_TYPE, "Invalid type for column! (available types are 'int',\
-                        'string', 'double' or empty cell('NULL'))"}
+    {Flag::BAD_TYPE, "Invalid type for column! (available types are 'int', 'string', 'double' or empty cell('NULL'))"}
 };
 
 const Flag& ErrorState::getState() {

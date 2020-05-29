@@ -1,0 +1,13 @@
+3 3
+t0Column0 int
+11
+-12
+13
+t0Column1 string
+"lol"
+NULL
+"Hello World"
+newColumn int
+NULL
+NULL
+NULL

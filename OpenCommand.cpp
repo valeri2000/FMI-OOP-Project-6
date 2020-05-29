@@ -11,8 +11,6 @@ void OpenCommand::execute(const std::string& param, Database* & obj) {
     if(ErrorState::getState() != Flag::GOOD) {
         delete obj;
         obj = nullptr;
-
-        std::cout << ErrorState::getMessage() << '\n';
     }
 }
 

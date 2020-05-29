@@ -1,5 +1,6 @@
 #include "Invoker.h"
 #include <iostream>
+#include <cassert>
 
 Invoker::Invoker(const std::vector<ICommand*>& data) :
 commands(data) {}
@@ -13,10 +14,13 @@ Invoker::~Invoker() {
 }
 
 bool Invoker::parseCommand(Database* &obj) {
+    assert(ErrorState::getState() == Flag::GOOD);
+
     std::cout << "\nEnter command: ";
     
     std::string line;
     std::getline(std::cin, line);
+
     unsigned int size = line.size();
 
     if(size == 0) {
@@ -59,7 +63,7 @@ bool Invoker::parseCommand(Database* &obj) {
     }
 
     if(!found) {
-        std::cout << "Invalid command! Type 'help' to view available commands!\n";
+        ErrorState::setState(Flag::BAD_COMMAND);
     }
 
     return true;
