@@ -13,6 +13,8 @@ Invoker::~Invoker() {
 }
 
 bool Invoker::parseCommand(Database* &obj) {
+    std::cout << "\nEnter command: ";
+    
     std::string line;
     std::getline(std::cin, line);
     unsigned int size = line.size();
