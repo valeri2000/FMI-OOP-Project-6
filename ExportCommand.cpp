@@ -1,29 +1,21 @@
 #include "ExportCommand.h"
+#include "Parser.h"
 
 void ExportCommand::execute(const std::string& param, Database* & obj) {
     if(obj == nullptr) {
-        std::cout << "Open first!\n";
+        ErrorState::setState(Flag::BAD_NODATA);
         return;
     }
 
-    std::string param1, param2;
-    for(unsigned int i = 0; i < param.size(); ++i) {
-        if(param[i] == ' ') {
-            for(unsigned int j = i + 1; j < param.size(); ++j) {
-                param2 += param[j];
-            }
-            break;
-        }
+    std::vector<std::string> params;
+    Parser::parseLineToParam(param, params);
 
-        param1 += param[i];
-    }
-
-    if(param1.size() == 0 || param2.size() == 0) {
-        std::cout << "INvalid command\n";
+    if(params.size() != 2) {
+        ErrorState::setState(Flag::BAD_COMMAND);
         return;
     }
 
-    obj->exportT(param1, param2);
+    obj->exportT(params[0], params[1]);
 }
 
 ExportCommand::ExportCommand(const std::string& name) :

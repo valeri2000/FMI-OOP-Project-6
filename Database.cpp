@@ -63,6 +63,11 @@ void Database::saveToInputFile() {
 void Database::saveToSpecificFile(const std::string& file) {
     std::ofstream out(file, std::ios::out | std::ios::trunc);
 
+    if(!out) {
+        ErrorState::setState(Flag::BAD_FILE);
+        return;
+    }
+
     out << this->tables.size() << '\n';
 
     for(unsigned int i = 0; i < this->tables.size(); ++i) {
@@ -75,10 +80,15 @@ void Database::saveToSpecificFile(const std::string& file) {
 
 void Database::importT(const std::string& tName, const std::string& tFileName) {
     if(this->indexOf.find(tName) != this->indexOf.end()) {
-        return; //handle
+        ErrorState::setState(Flag::BAD_TABLE_NAME);
+        return;
     }
 
-    this->tables.push_back(new Table(tName, tFileName));
+    Table* temp = new Table(tName, tFileName);
+
+    if(ErrorState::getState() == Flag::GOOD) {
+        this->tables.push_back(temp);
+    }
 }
 
 void Database::showT() const {
@@ -91,7 +101,8 @@ void Database::showT() const {
 
 void Database::exportT(const std::string& tName, const std::string& fileName) {
     if(this->indexOf.find(tName) == this->indexOf.end()) {
-        return; //handle
+        ErrorState::setState(Flag::BAD_TABLE_NAME);
+        return;
     }
 
     unsigned int index = this->indexOf[tName];
@@ -100,12 +111,10 @@ void Database::exportT(const std::string& tName, const std::string& fileName) {
 
 void Database::innerJoin(const std::string& tName1, const unsigned int& colIndex1, 
 const std::string& tName2, const unsigned int& colIndex2) {
-    if(this->indexOf.find(tName1) == this->indexOf.end()) {
-        return; //handle
-    }
-
-    if(this->indexOf.find(tName2) == this->indexOf.end()) {
-        return; //handle
+    if(this->indexOf.find(tName1) == this->indexOf.end() ||
+       this->indexOf.find(tName2) == this->indexOf.end()) {
+        ErrorState::setState(Flag::BAD_TABLE_NAME);
+        return;
     }
 
     unsigned int index1 = this->indexOf[tName1],
@@ -114,9 +123,14 @@ const std::string& tName2, const unsigned int& colIndex2) {
     const IColumn* colTable1 = this->tables[index1]->columnAt(colIndex1);
     const IColumn* colTable2 = this->tables[index2]->columnAt(colIndex2);
 
+    if(ErrorState::getState() != Flag::GOOD) {
+        return;
+    }
+
     if(colTable1->getType() !=
        colTable2->getType()) {
-        return; //handle
+        ErrorState::setState(Flag::BAD_TYPE);
+        return;
     }
 
     std::vector<IColumn*> newTable;
@@ -213,7 +227,8 @@ unsigned int Database::getTables() const {
 
 void Database::printT(const std::string& tName) {
     if(this->indexOf.find(tName) == this->indexOf.end()) {
-        return; //handle
+        ErrorState::setState(Flag::BAD_TABLE_NAME);
+        return;
     }
 
     unsigned int index = this->indexOf[tName];
@@ -222,7 +237,8 @@ void Database::printT(const std::string& tName) {
 
 void Database::describeT(const std::string& tName) {
     if(this->indexOf.find(tName) == this->indexOf.end()) {
-        return; //handle
+        ErrorState::setState(Flag::BAD_TABLE_NAME);
+        return;
     }
 
     unsigned int index = this->indexOf[tName];
@@ -231,7 +247,8 @@ void Database::describeT(const std::string& tName) {
 
 void Database::selectT(const std::string& tName, const unsigned int& colIndex, const std::string& value) {
     if(this->indexOf.find(tName) == this->indexOf.end()) {
-        return; //handle
+        ErrorState::setState(Flag::BAD_TABLE_NAME);
+        return;
     }
 
     unsigned int index = this->indexOf[tName];
@@ -240,7 +257,8 @@ void Database::selectT(const std::string& tName, const unsigned int& colIndex, c
 
 void Database::addColumnT(const std::string& tName, const std::string& colName, const std::string& colType) {
     if(this->indexOf.find(tName) == this->indexOf.end()) {
-        return; //handle
+        ErrorState::setState(Flag::BAD_TABLE_NAME);
+        return;
     }
 
     unsigned int index = this->indexOf[tName];
@@ -250,7 +268,8 @@ void Database::addColumnT(const std::string& tName, const std::string& colName, 
 void Database::updateT(const std::string& tName, const unsigned int& colIndex, 
 const std::string& value, const unsigned int& tColIndex, const std::string& tValue) {
     if(this->indexOf.find(tName) == this->indexOf.end()) {
-        return; //handle
+        ErrorState::setState(Flag::BAD_TABLE_NAME);
+        return;
     }
 
     unsigned int index = this->indexOf[tName];
@@ -259,7 +278,8 @@ const std::string& value, const unsigned int& tColIndex, const std::string& tVal
 
 void Database::delT(const std::string& tName, const unsigned int& colIndex, const std::string& value) {
     if(this->indexOf.find(tName) == this->indexOf.end()) {
-        return; //handle
+        ErrorState::setState(Flag::BAD_TABLE_NAME);
+        return;
     }
 
     unsigned int index = this->indexOf[tName];
@@ -268,7 +288,8 @@ void Database::delT(const std::string& tName, const unsigned int& colIndex, cons
 
 void Database::insertT(const std::string& tName, const std::vector<std::string>& values) {
     if(this->indexOf.find(tName) == this->indexOf.end()) {
-        return; //handle
+        ErrorState::setState(Flag::BAD_TABLE_NAME);
+        return;
     }
 
     unsigned int index = this->indexOf[tName];
@@ -276,12 +297,10 @@ void Database::insertT(const std::string& tName, const std::vector<std::string>&
 }
 
 void Database::renameT(const std::string& tName, const std::string& newName) {
-    if(this->indexOf.find(tName) == this->indexOf.end()) {
-        return; //handle
-    }
-
-    if(this->indexOf.find(newName) != this->indexOf.end()) {
-        return; //handle
+    if(this->indexOf.find(tName) == this->indexOf.end() ||
+       this->indexOf.find(newName) != this->indexOf.end()) {
+        ErrorState::setState(Flag::BAD_TABLE_NAME);
+        return;
     }
 
     unsigned int index = this->indexOf[tName];
@@ -290,7 +309,8 @@ void Database::renameT(const std::string& tName, const std::string& newName) {
 
 unsigned int Database::countT(const std::string& tName, const unsigned int& colIndex, const std::string& value) {
     if(this->indexOf.find(tName) == this->indexOf.end()) {
-        return 0; //handle
+        ErrorState::setState(Flag::BAD_TABLE_NAME);
+        return 0;
     }
 
     unsigned int index = this->indexOf[tName];
@@ -300,7 +320,8 @@ unsigned int Database::countT(const std::string& tName, const unsigned int& colI
 double Database::aggregateT(const std::string& tName, const unsigned int& colIndex, 
 const std::string& value, const unsigned int& tColIndex, const std::string& tValue) {
     if(this->indexOf.find(tName) == this->indexOf.end()) {
-        return 0; //handle
+        ErrorState::setState(Flag::BAD_TABLE_NAME);
+        return 0;
     }
 
     unsigned int index = this->indexOf[tName];

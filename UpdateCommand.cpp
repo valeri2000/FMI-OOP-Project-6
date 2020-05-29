@@ -3,7 +3,7 @@
 
 void UpdateCommand::execute(const std::string& param, Database* & obj) {
     if(obj == nullptr) {
-        std::cout << "Open first!\n";
+        ErrorState::setState(Flag::BAD_NODATA);
         return;
     }
 
@@ -11,7 +11,7 @@ void UpdateCommand::execute(const std::string& param, Database* & obj) {
     Parser::parseLineToParam(param, params);
 
     if(params.size() != 5) {
-        std::cout << "Incorrect command!\n";
+        ErrorState::setState(Flag::BAD_COMMAND);
         return;
     }
 
@@ -20,7 +20,7 @@ void UpdateCommand::execute(const std::string& param, Database* & obj) {
 
     if(res1.second == false || res1.first < 0 ||
        res2.second == false || res1.first < 0) {
-        std::cout << "Incorrect command!\n";
+        ErrorState::setState(Flag::BAD_INDEX);
         return;
     }
 

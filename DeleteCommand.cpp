@@ -3,7 +3,7 @@
 
 void DeleteCommand::execute(const std::string& param, Database* & obj) {
     if(obj == nullptr) {
-        std::cout << "Open first!\n";
+        ErrorState::setState(Flag::BAD_NODATA);
         return;
     }
 
@@ -11,14 +11,14 @@ void DeleteCommand::execute(const std::string& param, Database* & obj) {
     Parser::parseLineToParam(param, params);
 
     if(params.size() != 3) {
-        std::cout << "Invalid!\n";
+        ErrorState::setState(Flag::BAD_COMMAND);
         return;
     }
 
     std::pair<int, bool> res = Parser::convertToInt(params[1]);
 
     if(res.second == false || res.first < 0) {
-        std::cout << "Invalid!\n";
+        ErrorState::setState(Flag::BAD_INDEX);
         return;
     }
 

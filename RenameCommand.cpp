@@ -3,7 +3,7 @@
 
 void RenameCommand::execute(const std::string& param, Database* & obj) {
     if(obj == nullptr) {
-        std::cout << "Open first!\n";
+        ErrorState::setState(Flag::BAD_NODATA);
         return;
     }
 
@@ -11,7 +11,8 @@ void RenameCommand::execute(const std::string& param, Database* & obj) {
     Parser::parseLineToParam(param, params);
 
     if(params.size() != 2) {
-        std::cout << "Invaldi!\n";
+        ErrorState::setState(Flag::BAD_COMMAND);
+        return;
     }
 
     obj->renameT(params[0], params[1]);

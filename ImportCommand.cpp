@@ -1,29 +1,21 @@
 #include "ImportCommand.h"
+#include "Parser.h"
 
 void ImportCommand::execute(const std::string& param, Database* & obj) {
     if(obj == nullptr) {
-        std::cout << "Open first!\n";
+        ErrorState::setState(Flag::BAD_NODATA);
         return;
     }
 
-    std::string param1, param2;
-    for(unsigned int i = 0; i < param.size(); ++i) {
-        if(param[i] == ' ') {
-            for(unsigned j = i + 1; j < param.size(); ++j) {
-                param2 += param[j];
-            }
+    std::vector<std::string> params;
+    Parser::parseLineToParam(param, params);
 
-            break;
-        }
-
-        param1 += param[i];
+    if(params.size() != 2) {
+        ErrorState::setState(Flag::BAD_COMMAND);
+        return;
     }
 
-    if(param1.size() && param2.size()) {
-        obj->importT(param1, param2);
-    } else {
-        std::cout << "Invalid command!\n";
-    }
+    obj->importT(params[0], params[1]);
 }
 
 ImportCommand::ImportCommand(const std::string& name) :

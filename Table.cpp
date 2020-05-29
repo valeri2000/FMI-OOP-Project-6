@@ -3,6 +3,7 @@
 #include "Parser.h"
 #include <fstream>
 #include <iostream>
+#include <cassert>
 
 /// \brief File data structure is fixed
 ///
@@ -23,6 +24,7 @@ name(newName), file(newFile) {
 
     if(!in) {
         ErrorState::setState(Flag::BAD_FILE);
+        in.close();
         return;
     }
 
@@ -38,6 +40,7 @@ name(newName), file(newFile) {
         IColumn* tryType = ColumnFactory::produce(colName, colType);
         if(tryType == nullptr) {
             ErrorState::setState(Flag::BAD_TYPE);
+            in.close();
             return;
         }
 
@@ -49,6 +52,7 @@ name(newName), file(newFile) {
 
             this->columns[currCol]->insertRowWith(cellValue);
             if(ErrorState::getState() != Flag::GOOD) {
+                in.close();
                 return;
             }
         }
@@ -84,7 +88,8 @@ unsigned int Table::getColumns() const {
 
 const IColumn* Table::columnAt(const unsigned int& colIndex) const {
     if(colIndex >= this->columns.size()) {
-        return nullptr; //handle?
+        ErrorState::setState(Flag::BAD_INDEX);
+        return nullptr;
     }
 
     return this->columns[colIndex];
@@ -92,6 +97,7 @@ const IColumn* Table::columnAt(const unsigned int& colIndex) const {
 
 void Table::print() const {
     std::cout << "Printing table " << this->name << '\n';
+    
     for(unsigned int i = 0; i < this->countRows; ++i) {
         for(IColumn* currCol : this->columns) {
             std::cout << currCol->at(i) << ' ';
@@ -114,7 +120,14 @@ void Table::describe() const {
 void Table::saveToFile(const std::string& newFile) const {
     std::ofstream out(newFile, std::ios::out | std::ios::trunc);
 
-    out << (int)this->columns.size() << ' ' << this->countRows << '\n';
+    if(!out) {
+        ErrorState::setState(Flag::BAD_FILE);
+        out.close();
+
+        return;
+    }
+
+    out << this->columns.size() << ' ' << this->countRows << '\n';
 
     for(IColumn* i : this->columns) {
         out << i->getName() << ' ' << i->getType() << '\n';
@@ -129,7 +142,8 @@ void Table::saveToFile(const std::string& newFile) const {
 
 void Table::select(const unsigned int& colIndex, const std::string& value) const {
     if(colIndex >= this->columns.size()) {
-        return; //todo
+        ErrorState::setState(Flag::BAD_INDEX);
+        return;
     }
 
     std::vector<unsigned int> indices = this->columns[colIndex]->getRowsIndicesWith(value);
@@ -147,7 +161,8 @@ void Table::addColumn(const std::string& colName, const std::string& colType) {
     IColumn* tryCol = ColumnFactory::produce(colName, colType);
 
     if(tryCol == nullptr) {
-        return; //todo
+        ErrorState::setState(Flag::BAD_TYPE);
+        return;
     }
 
     this->columns.push_back(tryCol);
@@ -161,21 +176,25 @@ void Table::update(const unsigned int& colIndex, const std::string& value,
 const unsigned int& tcolIndex, const std::string& tvalue) {
     if(colIndex >= this->columns.size() ||
        tcolIndex >= this->columns.size()) {
-        return; //handle
+        ErrorState::setState(Flag::BAD_INDEX);
+        return;
     }
 
     std::vector<unsigned int> indices = this->columns[colIndex]->getRowsIndicesWith(value);
 
     for(const unsigned int& currRow : indices) {
         this->columns[tcolIndex]->updateRowByIndex(currRow, tvalue);
-        //handle incompatible type
-    }
 
+        if(ErrorState::getState() != Flag::GOOD) {
+            break;
+        }
+    }
 }
 
 void Table::del(const unsigned int& colIndex, const std::string& value) {
     if(colIndex >= this->columns.size()) {
-        return;//todo
+        ErrorState::setState(Flag::BAD_INDEX);
+        return;
     }
 
     std::vector<unsigned int> indices = this->columns[colIndex]->getRowsIndicesWith(value);
@@ -183,21 +202,61 @@ void Table::del(const unsigned int& colIndex, const std::string& value) {
     for(const unsigned int& rowIndex : indices) {
         for(IColumn* col : this->columns) {
             col->deleteRowByIndex(rowIndex);
+
+            if(ErrorState::getState() != Flag::GOOD) {
+                assert(true == false);
+            }
         }
     } 
 
-    this->countRows -= (int)indices.size();
+    this->countRows -= indices.size();
 }
 
 void Table::insert(const std::vector<std::string>& values) {
     if(values.size() != this->columns.size()) {
-        return;//todo
+        ErrorState::setState(Flag::BAD_COMMAND);
+        return;
+    }
+
+    unsigned int index = 0;
+    bool typeMatch = true;
+    for(IColumn* col : this->columns) {
+        std::string currType = col->getType();
+
+        if(currType == "string") {
+            if(Parser::isString(values[index]) == false) {
+                typeMatch = false;
+                break;
+            }
+        } 
+        else if(currType == "int") {
+            if(Parser::convertToInt(values[index]).second == false) {
+                typeMatch = false;
+                break;
+            }
+        } 
+        else if(currType == "double") {
+            if(Parser::convertToDouble(values[index]).second == false) {
+                typeMatch = false;
+                break;
+            }
+        } 
+        else {
+            assert(true == false);
+        }
+
+        index++;
+    }
+
+    if(!typeMatch) {
+        ErrorState::setState(Flag::BAD_TYPE);
+        return;
     }
 
     this->countRows++;
-    unsigned int index = 0;
+    index = 0;
     for(IColumn* col : this->columns) {
-        col->insertRowWith(values[index++]); //isitcorrecttype
+        col->insertRowWith(values[index++]);
     }
 }
 
@@ -207,7 +266,8 @@ void Table::rename(const std::string& newName) {
 
 unsigned int Table::count(const unsigned int& colIndex, const std::string& value) {
     if(colIndex >= this->columns.size()) {
-        return 0; //handle
+        ErrorState::setState(Flag::BAD_INDEX);
+        return 0;
     }
 
     std::vector<unsigned int> indices = this->columns[colIndex]->getRowsIndicesWith(value);
@@ -219,12 +279,14 @@ double Table::aggregate(const unsigned int& colIndex, const std::string& value,
 const unsigned int& tcolIndex, const std::string& oper) {
     if(colIndex >= this->columns.size() ||
        tcolIndex >= this->columns.size()) {
-        return 0; //handle
+        ErrorState::setState(Flag::BAD_INDEX);
+        return 0;
     }
 
     std::string tColType = this->columns[tcolIndex]->getType();
     if(tColType != "int" && tColType != "double") {
-        return 0; //handle
+        ErrorState::setState(Flag::BAD_TYPE);
+        return 0;
     }
 
     std::vector<unsigned int> indices = this->columns[colIndex]->getRowsIndicesWith(value);
@@ -235,10 +297,14 @@ const unsigned int& tcolIndex, const std::string& oper) {
             this->columns[tcolIndex]->at(currRow)
         ).first;
 
+        if(ErrorState::getState() != Flag::GOOD) {
+            assert(true == false);
+        }
+
         tempValues.push_back(currValue);
     }
 
-    double res;
+    double res = 0;
     if(oper == "sum") {
         res = 0;
 
@@ -264,7 +330,7 @@ const unsigned int& tcolIndex, const std::string& oper) {
             res = std::min(res, currValue);
         }
     } else {
-        return 0; //handle
+        ErrorState::setState(Flag::BAD_OPERATION);
     }
 
     return res;

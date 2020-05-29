@@ -2,12 +2,12 @@
 
 void ShowtablesCommand::execute(const std::string& param, Database* & obj) {
     if(obj == nullptr) {
-        std::cout << "Open first!\n";
+        ErrorState::setState(Flag::BAD_NODATA);
         return;
     }
 
-    if((int)param.size() > 0) {
-        std::cout << "Invalid command!\n";
+    if(param.size() > 0) {
+        ErrorState::setState(Flag::BAD_COMMAND);
         return;
     }
 

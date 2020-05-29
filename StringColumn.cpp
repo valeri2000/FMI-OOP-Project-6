@@ -7,6 +7,7 @@ std::string StringColumn::getType() const {
 
 std::string StringColumn::at(const unsigned int& index) const {
     if(index >= data.size()) {
+        ErrorState::setState(Flag::BAD_INDEX);
         return "";
     }
 
@@ -51,7 +52,8 @@ StringColumn::getRowsIndicesWith(const std::string& value) const {
 
 void StringColumn::updateRowByIndex(const unsigned int& index, const std::string& value) {
     if(index >= this->data.size()) {
-        return; //out of range
+        ErrorState::setState(Flag::BAD_INDEX);
+        return;
     }
 
     if(Parser::isString(value) == true) {
@@ -59,6 +61,8 @@ void StringColumn::updateRowByIndex(const unsigned int& index, const std::string
         this->data[index].second = true;
     } else if(Parser::isNull(value) == true) {
         this->data[index].second = false;
+    } else {
+        ErrorState::setState(Flag::BAD_TYPE);
     }
 }
 
@@ -66,7 +70,8 @@ void StringColumn::deleteRowByIndex(const unsigned int& index) {
     unsigned int n = this->data.size();
 
     if(index >= n) {
-        return; //out of range
+        ErrorState::setState(Flag::BAD_INDEX);
+        return;
     }
 
     for(unsigned int i = index + 1; i < n; ++i) {

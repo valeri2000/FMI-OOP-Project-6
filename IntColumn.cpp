@@ -8,7 +8,8 @@ std::string IntColumn::getType() const {
 
 std::string IntColumn::at(const unsigned int& index) const {
     if(index >= data.size()) {
-        return ""; //todo
+        ErrorState::setState(Flag::BAD_INDEX);
+        return "";
     }
 
     if(data[index].second == false) {
@@ -53,13 +54,15 @@ IntColumn::getRowsIndicesWith(const std::string& value) const {
 
 void IntColumn::updateRowByIndex(const unsigned int& index, const std::string& value) {
     if(index >= this->data.size()) {
-        return; //out of range
+        ErrorState::setState(Flag::BAD_INDEX);
+        return;
     }
 
     std::pair<int, bool> parsed = Parser::convertToInt(value);
     if(parsed.second == false) {
         if(Parser::isNull(value) == false) {
-            return; //incompatible value
+            ErrorState::setState(Flag::BAD_TYPE);
+            return;
         }
     }
 
@@ -70,7 +73,8 @@ void IntColumn::deleteRowByIndex(const unsigned int& index) {
     unsigned int n = this->data.size();
 
     if(index >= n) {
-        return; //out of range
+        ErrorState::setState(Flag::BAD_INDEX);
+        return;
     }
 
     for(unsigned int i = index + 1; i < n; ++i) {

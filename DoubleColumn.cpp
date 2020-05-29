@@ -11,7 +11,8 @@ std::string DoubleColumn::getType() const {
 
 std::string DoubleColumn::at(const unsigned int& index) const {
     if(index >= data.size()) {
-        return ""; //todo
+        ErrorState::setState(Flag::BAD_INDEX);
+        return "";
     }
 
     if(data[index].second == false) {
@@ -56,13 +57,15 @@ DoubleColumn::getRowsIndicesWith(const std::string& value) const {
 
 void DoubleColumn::updateRowByIndex(const unsigned int& index, const std::string& value) {
     if(index >= this->data.size()) {
-        return; //out of range
+        ErrorState::setState(Flag::BAD_INDEX);
+        return;
     }
 
     std::pair<double, bool> parsed = Parser::convertToDouble(value);
     if(parsed.second == false) {
         if(Parser::isNull(value) == false) {
-            return; //incompatible value
+            ErrorState::setState(Flag::BAD_TYPE);
+            return;
         }
     }
 
@@ -73,7 +76,8 @@ void DoubleColumn::deleteRowByIndex(const unsigned int& index) {
     unsigned int n = this->data.size();
 
     if(index >= n) {
-        return; //out of range
+        ErrorState::setState(Flag::BAD_INDEX);
+        return;
     }
 
     for(unsigned int i = index + 1; i < n; ++i) {

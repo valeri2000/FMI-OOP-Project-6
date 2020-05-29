@@ -12,6 +12,8 @@ enum class Flag {
     BAD_NODATA,
     BAD_REOPEN,
     BAD_FILE,
+    BAD_TABLE_NAME,
+    BAD_OPERATION,
     GOOD
 };
 

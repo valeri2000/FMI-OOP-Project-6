@@ -44,5 +44,9 @@ App::~App() {
 }
 
 void App::run() {
-    while(this->invoker->parseCommand(this->database) == true) {}
+    while(this->invoker->parseCommand(this->database) == true) {
+        if(ErrorState::getState() != Flag::GOOD) {
+            std::cout << ErrorState::getMessage() << '\n';
+        }
+    }
 }
