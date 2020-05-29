@@ -27,7 +27,20 @@ class Table {
         /// \brief Getter for the file name
         /// \return 'string' which is the file name
         std::string getFile() const;
+
+        /// \brief Getter for number of rows
+        /// \return 'unsigned int' which is the desired number
+        unsigned int getRows() const;
+
+        /// \brief Getter for number of columns
+        /// \return 'unsigned int' which is the desired number
+        unsigned int getColumns() const;
         
+        /// \brief Getter for specific column by index
+        /// \param 'const unsigned int' which is the column index
+        /// \return 'const IColumn*' which is const pointer to the desired column
+        const IColumn* columnAt(const unsigned int&) const;
+
         /// \brief Function which prints the table
         void print() const;
 

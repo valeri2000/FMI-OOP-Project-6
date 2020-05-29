@@ -69,6 +69,22 @@ std::string Table::getFile() const {
     return this->file;
 }
 
+unsigned int Table::getRows() const {
+    return this->countRows;
+}
+
+unsigned int Table::getColumns() const {
+    return this->columns.size();
+}
+
+const IColumn* Table::columnAt(const unsigned int& colIndex) const {
+    if(colIndex >= this->columns.size()) {
+        return nullptr; //handle?
+    }
+
+    return this->columns[colIndex];
+}
+
 void Table::print() const {
     std::cout << "Printing table " << this->name << '\n';
     for(unsigned int i = 0; i < this->countRows; ++i) {

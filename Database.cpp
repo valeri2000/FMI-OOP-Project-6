@@ -1,4 +1,5 @@
 #include "Database.h"
+#include "ColumnFactory.h"
 
 /// \brief File structure is fixed
 ///
@@ -59,8 +60,114 @@ void Database::exportT(const std::string& tName, const std::string& fileName) {
     this->tables[index]->saveToFile(fileName);
 }
 
-void innerJoin(const std::string&, const unsigned int&, 
-               const std::string&, const unsigned int&);
+void Database::innerJoin(const std::string& tName1, const unsigned int& colIndex1, 
+const std::string& tName2, const unsigned int& colIndex2) {
+    if(this->indexOf.find(tName1) == this->indexOf.end()) {
+        return; //handle
+    }
+
+    if(this->indexOf.find(tName2) == this->indexOf.end()) {
+        return; //handle
+    }
+
+    unsigned int index1 = this->indexOf[tName1],
+                 index2 = this->indexOf[tName2];
+
+    const IColumn* colTable1 = this->tables[index1]->columnAt(colIndex1);
+    const IColumn* colTable2 = this->tables[index2]->columnAt(colIndex2);
+
+    if(colTable1->getType() !=
+       colTable2->getType()) {
+        return; //handle
+    }
+
+    std::vector<IColumn*> newTable;
+    newTable.push_back(ColumnFactory::produce("ijcol", colTable1->getType()));
+
+    for(unsigned int j = 0; j < this->tables[index1]->getColumns(); ++j) {
+        if(j == colIndex1) {
+            continue;
+        }
+
+        newTable.push_back(ColumnFactory::produce(
+            this->tables[index1]->columnAt(j)->getName(),
+            this->tables[index1]->columnAt(j)->getType()
+            )
+        );
+    }
+
+    for(unsigned int j = 0; j < this->tables[index2]->getColumns(); ++j) {
+        if(j == colIndex2) {
+            continue;
+        }
+
+        newTable.push_back(ColumnFactory::produce(
+            this->tables[index2]->columnAt(j)->getName(),
+            this->tables[index2]->columnAt(j)->getType()
+            )
+        );
+    }
+
+    bool foundMatch = false;
+    unsigned int newTableRows = 0;
+    unsigned int allRows = this->tables[index1]->getRows();
+    for(unsigned int currRow = 0; currRow < allRows; ++currRow) {
+        std::vector<unsigned int> matchIndices = 
+            colTable2->getRowsIndicesWith(colTable1->at(currRow));
+
+        if(matchIndices.size() == 0) {
+            continue;
+        }
+
+        foundMatch = true;
+        for(const unsigned int& row : matchIndices) {
+            // currRow table1 -> row table2
+            newTableRows++;
+
+            std::vector<std::string> valuesToAdd;
+            valuesToAdd.push_back(colTable1->at(currRow));
+
+            for(unsigned int j = 0; j < this->tables[index1]->getColumns(); ++j) {
+                if(j == colIndex1) {
+                    continue;
+                }
+
+                valuesToAdd.push_back(this->tables[index1]->columnAt(j)->at(currRow));
+            }
+
+            for(unsigned int j = 0; j < this->tables[index2]->getColumns(); ++j) {
+                if(j == colIndex2) {
+                    continue;
+                }
+
+                valuesToAdd.push_back(this->tables[index2]->columnAt(j)->at(row));
+            }
+
+            for(unsigned int index = 0; index < newTable.size(); ++index) {
+                newTable[index]->insertRowWith(valuesToAdd[index]);
+            }
+        }  
+    }
+
+    if(!foundMatch) {
+        std::cout << "Found no matches between rows!\n";
+    } else {
+        std::cout << "Found matches between rows! Inner Join completed!\n";
+        
+        for(unsigned int row = 0; row < newTableRows; ++row) {
+            for(IColumn* i : newTable) {
+                std::cout << i->at(row) << ' ';
+            }
+
+            std::cout << '\n';
+        }
+    }
+
+    for(IColumn* &i : newTable) {
+        delete i;
+    }
+    newTable.clear();
+}
 
 void Database::printT(const std::string& tName) {
     if(this->indexOf.find(tName) == this->indexOf.end()) {
