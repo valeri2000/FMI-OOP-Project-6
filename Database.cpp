@@ -1,6 +1,15 @@
 #include "Database.h"
 #include "ColumnFactory.h"
 
+void Database::clearDatabase() {
+    for(Table* &t : this->tables) {
+        delete t;
+    }
+
+    this->tables.clear();
+    this->indexOf.clear();
+}
+
 /// \brief File structure is fixed
 ///
 /// <number of tables>
@@ -24,15 +33,38 @@ Database::Database(const std::string& fileName) {
         this->tables.push_back(new Table(tempName, tempFileName));
         this->indexOf[tempName] = i;
     }
+
+    this->inputFile = fileName;
 }
 
 Database::~Database() {
-    for(Table* &t : this->tables) {
-        delete t;
+    this->clearDatabase();
+}
+
+void Database::saveToInputFile() {
+    std::ofstream out(this->inputFile, std::ios::out | std::ios::trunc);
+
+    out << this->tables.size() << '\n';
+
+    for(unsigned int i = 0; i < this->tables.size(); ++i) {
+        out << this->tables[i]->getName() << ' ';
+        out << this->tables[i]->getFile() << '\n';
     }
 
-    this->tables.clear();
-    this->indexOf.clear();
+    out.close();
+}
+
+void Database::saveToSpecificFile(const std::string& file) {
+    std::ofstream out(file, std::ios::out | std::ios::trunc);
+
+    out << this->tables.size() << '\n';
+
+    for(unsigned int i = 0; i < this->tables.size(); ++i) {
+        out << this->tables[i]->getName() << ' ';
+        out << this->tables[i]->getFile() << '\n';
+    }
+
+    out.close();
 }
 
 void Database::importT(const std::string& tName, const std::string& tFileName) {
@@ -167,6 +199,10 @@ const std::string& tName2, const unsigned int& colIndex2) {
         delete i;
     }
     newTable.clear();
+}
+
+unsigned int Database::getTables() const {
+    return this->tables.size();
 }
 
 void Database::printT(const std::string& tName) {

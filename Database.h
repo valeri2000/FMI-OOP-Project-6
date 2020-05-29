@@ -10,6 +10,10 @@ class Database {
     private:
         std::vector<Table*> tables; ///< vector of tables, which is the data in the database
         std::unordered_map<std::string, unsigned int> indexOf; ///< match table name to its index in the database 
+        std::string inputFile; ///< file from which it is loaded
+
+        /// \brief Private function for deleting database data
+        void clearDatabase();
 
     public:
         /// \brief Constructor for database
@@ -18,6 +22,13 @@ class Database {
 
         /// \brief Destructor which will delete the Table objects
         ~Database();
+
+        /// \brief Saves database to the input file
+        void saveToInputFile();
+
+        /// \brief Save to different file
+        /// \param 'const string' which is output file name 
+        void saveToSpecificFile(const std::string&);
 
         /// \brief Import table
         /// \param first 'const std::string' which is the table name
@@ -41,6 +52,10 @@ class Database {
                        const std::string&, const unsigned int&);
 
     public:
+        /// \brief Getter for number of tables loaded
+        /// \return 'unsigned int' which is the desired number
+        unsigned int getTables() const;
+
         /// \brief Function which prints the table
         /// \param first 'const string' which is the name of the table
         ///

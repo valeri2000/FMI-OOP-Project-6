@@ -25,5 +25,5 @@ App::~App() {
 }
 
 void App::run() {
-    while(this->invoker->parseCommand() == true) {}
+    while(this->invoker->parseCommand(this->database) == true) {}
 }

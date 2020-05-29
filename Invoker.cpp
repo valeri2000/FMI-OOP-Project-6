@@ -12,7 +12,7 @@ Invoker::~Invoker() {
     this->commands.clear();
 }
 
-bool Invoker::parseCommand() {
+bool Invoker::parseCommand(Database* &obj) {
     std::string line;
     std::getline(std::cin, line);
     unsigned int size = line.size();
@@ -50,7 +50,7 @@ bool Invoker::parseCommand() {
     bool found = false;
     for(ICommand* command : this->commands) {
         if(command->getCommandName() == currCommand) {
-            command->execute(parameters);
+            command->execute(parameters, obj);
             found = true;
             break;
         } 

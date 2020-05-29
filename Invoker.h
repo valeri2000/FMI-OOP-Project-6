@@ -17,7 +17,7 @@ class Invoker {
         ~Invoker();
 
         /// \brief Main method of Invoker class which parses commands
-        bool parseCommand();
+        bool parseCommand(Database* &);
 };
 
 #endif

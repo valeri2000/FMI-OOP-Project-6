@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <iostream>
+#include "Database.h"
 
 /// \brief Interface class for all commands
 class ICommand {
@@ -18,7 +19,7 @@ class ICommand {
 
         /// \brief Pure virtual method to execute an action
         /// \param 'const string' which is all the parameters combined
-        virtual void execute(const std::string&) = 0;
+        virtual void execute(const std::string&, Database* &) = 0;
 
         /// \brief Pure virtual getter for command name for recognizing commands
         /// \return 'const string&' which is command name
