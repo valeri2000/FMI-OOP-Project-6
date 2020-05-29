@@ -112,3 +112,46 @@ bool
 Parser::isNull(const std::string& input) {
     return input == "NULL";
 }       
+
+void Parser::parseLineToParam(
+    const std::string& line, 
+    std::vector<std::string>& params
+) {
+    params.clear();
+    std::string currParam;
+
+    bool startedString = false;
+    unsigned int size = line.size();
+
+    for(unsigned i = 0; i < size; ++i) {
+        if(line[i] == ' ') {
+            if(startedString == true) {
+                currParam += line[i];
+            } else {
+                if(currParam.size() > 0) {
+                    params.push_back(currParam);
+                }
+                
+                currParam = "";
+            }
+        } else if(line[i] == '"') {
+            if(startedString == true) {
+                startedString = false;
+
+                currParam += line[i];
+                params.push_back(currParam);
+                currParam = "";
+            } else {
+                startedString = true;
+
+                currParam += line[i];
+            }
+        } else {
+            currParam += line[i];
+        }
+    }
+
+    if(currParam.size() > 0) {
+        params.push_back(currParam);
+    }
+}

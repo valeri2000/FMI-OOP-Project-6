@@ -3,8 +3,9 @@
 
 #include <utility>
 #include <iostream>
+#include <vector>
 
-/// \brief Class for converting input to column type values.
+/// \brief Class for converting input to specific types
 class Parser {
     public:
         /// \brief Static function to convert user input to integer.
@@ -32,6 +33,11 @@ class Parser {
         /// \return 'bool' which is true/false
         static bool
             isNull(const std::string&);
+
+        /// \brief Function to split line to parameters
+        /// \param first 'const string' which is the line as string
+        /// \param second 'vector<string>' which is where the parameters will be stored
+        static void parseLineToParam(const std::string&, std::vector<std::string>&);
 };
 
 #endif
