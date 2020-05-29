@@ -6,7 +6,7 @@ std::string StringColumn::getType() const {
 }
 
 std::string StringColumn::at(const unsigned int& index) const {
-    if(index >= (int)data.size()) {
+    if(index >= data.size()) {
         return "";
     }
 
@@ -50,7 +50,7 @@ StringColumn::getRowsIndicesWith(const std::string& value) const {
 }
 
 void StringColumn::updateRowByIndex(const unsigned int& index, const std::string& value) {
-    if(index >= (int)this->data.size()) {
+    if(index >= this->data.size()) {
         return; //out of range
     }
 
@@ -63,7 +63,7 @@ void StringColumn::updateRowByIndex(const unsigned int& index, const std::string
 }
 
 void StringColumn::deleteRowByIndex(const unsigned int& index) {
-    int n = (int)this->data.size();
+    unsigned int n = this->data.size();
 
     if(index >= n) {
         return; //out of range

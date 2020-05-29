@@ -123,7 +123,7 @@ void Table::saveToFile(const std::string& newFile) const {
 }
 
 void Table::select(const unsigned int& colIndex, const std::string& value) const {
-    if(colIndex >= (int)this->columns.size()) {
+    if(colIndex >= this->columns.size()) {
         return; //todo
     }
 
@@ -154,8 +154,8 @@ void Table::addColumn(const std::string& colName, const std::string& colType) {
 
 void Table::update(const unsigned int& colIndex, const std::string& value, 
 const unsigned int& tcolIndex, const std::string& tvalue) {
-    if(colIndex >= (int)this->columns.size() ||
-       tcolIndex >= (int)this->columns.size()) {
+    if(colIndex >= this->columns.size() ||
+       tcolIndex >= this->columns.size()) {
         return; //handle
     }
 
@@ -169,7 +169,7 @@ const unsigned int& tcolIndex, const std::string& tvalue) {
 }
 
 void Table::del(const unsigned int& colIndex, const std::string& value) {
-    if(colIndex >= (int)this->columns.size()) {
+    if(colIndex >= this->columns.size()) {
         return;//todo
     }
 
@@ -185,7 +185,7 @@ void Table::del(const unsigned int& colIndex, const std::string& value) {
 }
 
 void Table::insert(const std::vector<std::string>& values) {
-    if((int)values.size() != (int)this->columns.size()) {
+    if(values.size() != this->columns.size()) {
         return;//todo
     }
 
@@ -201,7 +201,7 @@ void Table::rename(const std::string& newName) {
 }
 
 unsigned int Table::count(const unsigned int& colIndex, const std::string& value) {
-    if(colIndex >= (int)this->columns.size()) {
+    if(colIndex >= this->columns.size()) {
         return 0; //handle
     }
 
@@ -212,8 +212,8 @@ unsigned int Table::count(const unsigned int& colIndex, const std::string& value
 
 double Table::aggregate(const unsigned int& colIndex, const std::string& value, 
 const unsigned int& tcolIndex, const std::string& oper) {
-    if(colIndex >= (int)this->columns.size() ||
-       tcolIndex >= (int)this->columns.size()) {
+    if(colIndex >= this->columns.size() ||
+       tcolIndex >= this->columns.size()) {
         return 0; //handle
     }
 

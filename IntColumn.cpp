@@ -7,7 +7,7 @@ std::string IntColumn::getType() const {
 }
 
 std::string IntColumn::at(const unsigned int& index) const {
-    if(index >= (int)data.size()) {
+    if(index >= data.size()) {
         return ""; //todo
     }
 
@@ -52,7 +52,7 @@ IntColumn::getRowsIndicesWith(const std::string& value) const {
 }
 
 void IntColumn::updateRowByIndex(const unsigned int& index, const std::string& value) {
-    if(index >= (int)this->data.size()) {
+    if(index >= this->data.size()) {
         return; //out of range
     }
 
@@ -67,7 +67,7 @@ void IntColumn::updateRowByIndex(const unsigned int& index, const std::string& v
 }
 
 void IntColumn::deleteRowByIndex(const unsigned int& index) {
-    int n = (int)this->data.size();
+    unsigned int n = this->data.size();
 
     if(index >= n) {
         return; //out of range
