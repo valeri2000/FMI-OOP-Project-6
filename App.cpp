@@ -10,8 +10,20 @@ App* App::getInstance() {
     return instance;
 }
 
-App::App() : database(nullptr) {}
+App::App() : database(nullptr) {
+    this->invoker = new Invoker(
+    {}
+    );
+}
+
+App::~App() {
+    delete this->database;
+    this->database = nullptr;
+
+    delete this->invoker;
+    this->invoker = nullptr;
+}
 
 void App::run() {
-    
+    while(this->invoker->parseCommand() == true) {}
 }
