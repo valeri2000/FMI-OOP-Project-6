@@ -20,7 +20,8 @@ Database::Database(const std::string& fileName) {
     std::ifstream in(fileName, std::ios::in);
 
     if(!in) {
-        return; //handle
+        ErrorState::setState(Flag::BAD_FILE);
+        return;
     }
 
     unsigned int n;
@@ -31,6 +32,11 @@ Database::Database(const std::string& fileName) {
         in >> tempName >> tempFileName;
 
         this->tables.push_back(new Table(tempName, tempFileName));
+
+        if(ErrorState::getState() != Flag::GOOD) {
+            return;
+        }
+
         this->indexOf[tempName] = i;
     }
 

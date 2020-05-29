@@ -8,6 +8,10 @@
 enum class Flag {
     BAD_INDEX,
     BAD_TYPE,
+    BAD_COMMAND,
+    BAD_NODATA,
+    BAD_REOPEN,
+    BAD_FILE,
     GOOD
 };
 

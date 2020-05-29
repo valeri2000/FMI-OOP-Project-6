@@ -86,7 +86,8 @@ void DoubleColumn::insertRowWith(const std::string& value) {
     std::pair<double, bool> parsed = Parser::convertToDouble(value);
     if(parsed.second == false) {
         if(Parser::isNull(value) == false) {
-            return; //incompatible type
+            ErrorState::setState(Flag::BAD_TYPE);
+            return;
         }
     }
 

@@ -22,7 +22,8 @@ name(newName), file(newFile) {
     std::ifstream in(file, std::ios::in);
 
     if(!in) {
-        return; //TODO
+        ErrorState::setState(Flag::BAD_FILE);
+        return;
     }
 
     unsigned int cols, rows;
@@ -36,7 +37,8 @@ name(newName), file(newFile) {
 
         IColumn* tryType = ColumnFactory::produce(colName, colType);
         if(tryType == nullptr) {
-            return; //TODO
+            ErrorState::setState(Flag::BAD_TYPE);
+            return;
         }
 
         this->columns[currCol] = tryType;
@@ -46,6 +48,9 @@ name(newName), file(newFile) {
             in >> cellValue;
 
             this->columns[currCol]->insertRowWith(cellValue);
+            if(ErrorState::getState() != Flag::GOOD) {
+                return;
+            }
         }
     }
 

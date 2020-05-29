@@ -3,6 +3,10 @@
 Flag ErrorState::state = Flag::GOOD;
 std::unordered_map<Flag, std::string> ErrorState::msgs = {
     {Flag::BAD_INDEX, "Invalid index! (out of range)"},
+    {Flag::BAD_NODATA, "No data loaded! First you need to open file to load data."},
+    {Flag::BAD_REOPEN, "You need to close current file first, in order to open a new one."},
+    {Flag::BAD_FILE, "The given file is invalid!"},
+    {Flag::BAD_COMMAND, "Invalid command! Type 'help' to view available commands and usage."},
     {Flag::BAD_TYPE, "Invalid type for column! (available types are 'int',\
                         'string', 'double' or empty cell('NULL'))"}
 };

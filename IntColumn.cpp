@@ -83,7 +83,8 @@ void IntColumn::insertRowWith(const std::string& value) {
     std::pair<int, bool> parsed = Parser::convertToInt(value);
     if(parsed.second == false) {
         if(Parser::isNull(value) == false) {
-            return; //incompatible type
+            ErrorState::setState(Flag::BAD_TYPE);
+            return;
         }
     }
 

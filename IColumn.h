@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <iostream>
+#include "ErrorState.h"
 
 /// \brief Abstract class for all columns.
 /// 

@@ -2,11 +2,18 @@
 
 void OpenCommand::execute(const std::string& param, Database* & obj) {
     if(obj != nullptr) {
-        std::cout << "Close first!\n";
+        ErrorState::setState(Flag::BAD_REOPEN);
         return;
     }
 
     obj = new Database(param);
+
+    if(ErrorState::getState() != Flag::GOOD) {
+        delete obj;
+        obj = nullptr;
+
+        std::cout << ErrorState::getMessage() << '\n';
+    }
 }
 
 OpenCommand::OpenCommand(const std::string& name) :
