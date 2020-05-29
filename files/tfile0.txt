@@ -1,9 +1,29 @@
-2 3
+4 6
 t0Column0 int
 11
 -12
 13
+14
+11
+11
 t0Column1 string
 "lol"
 NULL
 "Hello World"
+"bla"
+"bla"
+"fd"
+colInt int
+NULL
+NULL
+NULL
+234
+31221
+21321
+colDouble double
+NULL
+NULL
+NULL
+23.200000
+0.000000
+122.000000
