@@ -1,6 +1,7 @@
 #include "HelpCommand.h"
 
 void HelpCommand::execute(const std::string& param, Database* & obj) {
+    std::cout << "warning: indexation starts from 0!\n";
     std::cout << "open (P1)" << "\n";
     std::cout << "\topens a file\n";
 
