@@ -85,6 +85,8 @@ void StringColumn::insertRowWith(const std::string& value) {
         this->data.push_back(std::make_pair(value, true));
     } else if(Parser::isNull(value) == true) {
         this->data.push_back(std::make_pair("", false));
+    } else {
+        ErrorState::setState(Flag::BAD_TYPE);
     }
 }
 

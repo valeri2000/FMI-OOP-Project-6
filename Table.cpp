@@ -99,6 +99,11 @@ const IColumn* Table::columnAt(const unsigned int& colIndex) const {
 void Table::print() const {
     std::cout << "Printing table " << this->name << '\n';
     
+    for(IColumn* currCol : this->columns) {
+        std::cout << currCol->getName() << ' ';
+    }
+    std::cout << '\n';
+
     for(unsigned int i = 0; i < this->countRows; ++i) {
         for(IColumn* currCol : this->columns) {
             std::cout << currCol->at(i) << ' ';
@@ -200,7 +205,10 @@ void Table::del(const unsigned int& colIndex, const std::string& value) {
 
     std::vector<unsigned int> indices = this->columns[colIndex]->getRowsIndicesWith(value);
 
-    for(const unsigned int& rowIndex : indices) {
+    unsigned int offset = 0;
+    for(unsigned int& rowIndex : indices) {
+        rowIndex -= offset;
+
         for(IColumn* col : this->columns) {
             col->deleteRowByIndex(rowIndex);
 
@@ -208,6 +216,8 @@ void Table::del(const unsigned int& colIndex, const std::string& value) {
                 assert(true == false);
             }
         }
+
+        offset++;
     } 
 
     this->countRows -= indices.size();
@@ -261,6 +271,10 @@ void Table::insert(const std::vector<std::string>& values) {
     index = 0;
     for(IColumn* col : this->columns) {
         col->insertRowWith(values[index++]);
+
+        if(ErrorState::getState() != Flag::GOOD) {
+            assert(true == false);
+        }
     }
 }
 

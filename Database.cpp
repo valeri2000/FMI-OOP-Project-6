@@ -99,6 +99,7 @@ void Database::importT(const std::string& tName, const std::string& tFileName) {
 
     if(ErrorState::getState() == Flag::GOOD) {
         this->tables.push_back(temp);
+        this->indexOf[tName] = this->tables.size() - 1;
     }
 }
 
