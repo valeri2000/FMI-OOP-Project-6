@@ -23,6 +23,12 @@ class Database {
         /// \brief Destructor which will delete the Table objects
         ~Database();
 
+        /// \brief Disable copy constructor
+        Database(const Database&) = delete;
+
+        /// \brief Disable operator=
+        Database& operator = (const Database&) = delete;
+
         /// \brief Saves database to the input file
         void saveToInputFile();
 

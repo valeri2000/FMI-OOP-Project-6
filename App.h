@@ -20,6 +20,12 @@ class App {
         /// \return 'App*'
         static App* getInstance();
 
+        /// \brief Disable copy constructor
+        App(const App&) = delete;
+
+        /// \brief Disable operator=
+        App& operator = (const App&) = delete;
+
         /// \brief Destructor for App class
         ~App();
 

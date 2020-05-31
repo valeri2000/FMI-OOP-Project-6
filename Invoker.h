@@ -16,7 +16,15 @@ class Invoker {
         /// \brief Destructor for invoker class
         ~Invoker();
 
+        /// \brief Disable copy constructor
+        Invoker(const Invoker&) = delete;
+
+        /// \brief Disable operator=
+        Invoker& operator = (const Invoker&) = delete;
+
         /// \brief Main method of Invoker class which parses commands
+        /// \param first 'Database* &' which is actual reference to the database object
+        /// \return 'bool' which is false if last command was 'exit'
         bool parseCommand(Database* &);
 };
 

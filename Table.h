@@ -20,6 +20,12 @@ class Table {
         /// \brief Destructor as we have dynamic memory
         ~Table();
 
+        /// \brief Disable copy constructor
+        Table(const Table&) = delete;
+
+        /// \brief Disable operator=
+        Table& operator = (const Table&) = delete;
+
         /// \brief Getter for table name
         /// \return 'string' which is the name of the table
         std::string getName() const;
